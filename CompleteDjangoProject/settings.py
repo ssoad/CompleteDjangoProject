@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 
@@ -134,3 +134,28 @@ LOGIN_REDIRECT_URL = 'products_list'
 
 LOGOUT_REDIRECT_URL = 'products_list'
 
+
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'contact.formulabd71@gmail.com'
+EMAIL_HOST_PASSWORD = ''
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+'''
+from django.core.mail import send_mail
+
+send_mail(
+    subject='Django',
+    message='This is a test email sent by using Django code!',
+    from_email='contact.formulabd71@gmail.com',
+    recipient_list=[''],
+    fail_silently=True
+)
+'''

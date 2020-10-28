@@ -23,15 +23,47 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
     path('products/', product_views.showProducts, name='products_list'),
+
+
     path('products/<int:product_id>', product_views.showDetails, name='detail_view'),
+
+
     path('upload/', product_views.uploadProducts, name='upload_product'),
+
+
     path('signup/', user_views.register, name='register'),
 
     path('accounts/', include('django.contrib.auth.urls')),
 
     path('profile/', user_views.show_profile, name='show_profile'),
-    path('createprofile/', user_views.create_profile, name='create_profile')
+    path('createprofile/', user_views.create_profile, name='create_profile'),
+
+    path('email/', user_views.send_email, name='email'),
+    path('verification/', user_views.verify_email, name='verification'),
+
+    path('cart/', product_views.view_cart, name='cart'),
+
+    path('updatecart/<int:product_id>', product_views.update_cart, name='update-cart'),
+
+
+    path('deletefromcart/<int:product_id>', product_views.delete_from_cart, name='delete-from-cart'),
+
+    path('myorders/', product_views.my_orders, name='my-orders'),
+
+    path('orderproduct/<int:product_id>', product_views.make_order, name='order-product'),
+
+    path('bkash/<int:product_id>', product_views.bkash_order, name='bkash-order-product'),
+
+    path('review/<int:product_id>', product_views.review_after_complete, name='review'),
+
+    path('chat/', user_views.send_message, name='chat'),
+
+    path('sessionprofile/', user_views.save_profile_session, name='session-profile'),
+    
+    path('abouts/', user_views.abouts, name='abouts')
+
 ]
 
 if settings.DEBUG == True:
