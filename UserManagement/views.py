@@ -77,7 +77,7 @@ def create_profile(request):
             return redirect('products_list')
 
     context = {
-        'form' : form
+        'form': form
     }
     return render(request, 'UserManagement/create_profile.html', context)
 

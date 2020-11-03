@@ -5,34 +5,31 @@ from .models import Product, Cart, Order, Review
 from .forms import ProductForm, ReviewForm
 from django.contrib.auth.decorators import login_required
 
+
 # Create your views here.
 
 def showProducts(request):
-
     products = Product.objects.all()
 
-
     if request.method == 'POST':
-        products = Product.objects.filter(name__icontains = request.POST['search'])
-        category = Product.objects.filter(category__icontains = request.POST['search'])
-        description = Product.objects.filter(description__icontains = request.POST['search'])
+        products = Product.objects.filter(name__icontains=request.POST['search'])
+        category = Product.objects.filter(category__icontains=request.POST['search'])
+        description = Product.objects.filter(description__icontains=request.POST['search'])
 
-        products = products | category | description # C = A U B set operation
+        products = products | category | description  # C = A U B set operation
 
     user_count = User.objects.count()
     product_count = Product.objects.count()
 
     context = {
-        'products' : products,
-        'u_c' : user_count,
-        'p_c' : product_count
+        'products': products,
+        'u_c': user_count,
+        'p_c': product_count
     }
     return render(request, 'ProductManagement/products.html', context)
 
 
-
 def showDetails(request, product_id):
-
     searched_product = get_object_or_404(Product, id=product_id)
 
     form = ReviewForm()
@@ -55,21 +52,16 @@ def showDetails(request, product_id):
     return render(request, 'ProductManagement/detail_product_view.html', context)
 
 
-
-
 def showDetails2(request, product_id):
+    # searched_product = get_object_or_404(Product, id=product_id)
 
-    #searched_product = get_object_or_404(Product, id=product_id)
-
-    #searched_product = Product.objects.get(id=product_id) #sure one return
-    #print(searched_product)
+    # searched_product = Product.objects.get(id=product_id) #sure one return
+    # print(searched_product)
 
     searched_product = Product.objects.filter(id=product_id)  # many return
 
-    #searched_product = get_object_or_404(Product, id=product_id)
-    #print(searched_product)
-
-
+    # searched_product = get_object_or_404(Product, id=product_id)
+    # print(searched_product)
 
     if len(searched_product) == 0:
         does_exists = False
@@ -86,6 +78,7 @@ def showDetails2(request, product_id):
 
     return render(request, 'ProductManagement/detail_product_view.html', context)
 
+
 @login_required
 def uploadProducts(request):
     form = ProductForm()
@@ -98,7 +91,7 @@ def uploadProducts(request):
             return redirect('products_list')
 
     context = {
-        'form' : form
+        'form': form
     }
 
     return render(request, 'ProductManagement/upload.html', context)
@@ -106,9 +99,7 @@ def uploadProducts(request):
 
 @login_required
 def view_cart(request):
-
     cart = Cart.objects.get(user=request.user)
-
 
     total = 0
     for product in cart.product.all():
@@ -116,16 +107,14 @@ def view_cart(request):
 
     context = {
         'cart': cart,
-        'total' : total
+        'total': total
     }
 
     return render(request, 'ProductManagement/cart.html', context)
 
 
-
 @login_required
 def update_cart(request, product_id):
-
     product = get_object_or_404(Product, id=product_id)
     cart = get_object_or_404(Cart, user=request.user)
 
@@ -133,6 +122,7 @@ def update_cart(request, product_id):
     cart.save()
 
     return redirect('cart')
+
 
 '''
 try:
@@ -142,9 +132,9 @@ except cart.DoesNotExist:
     cart = Cart(user=request.user)
 '''
 
+
 @login_required
 def delete_from_cart(request, product_id):
-
     product = get_object_or_404(Product, id=product_id)
     cart = Cart.objects.get(user=request.user)
 
@@ -154,10 +144,8 @@ def delete_from_cart(request, product_id):
     return redirect('cart')
 
 
-
 @login_required
 def my_orders(request):
-
     orders = Order(user=request.user)
 
     try:
@@ -171,16 +159,14 @@ def my_orders(request):
     for order in orders:
         total += order.product.price
 
-
     context = {
         'orders': orders,
         'order_status': order_status,
-        'total' : total
+        'total': total
 
     }
 
     return render(request, 'ProductManagement/order.html', context)
-
 
 
 @login_required
@@ -193,11 +179,11 @@ def make_order(request, product_id):
     cart.product.remove(product)
     cart.save()
 
-    #return HttpResponseRedirect(reverse('cart'))
+    # return HttpResponseRedirect(reverse('cart'))
     return redirect('cart')
 
-def test(request):
 
+def test(request):
     print(request.POST)
 
     return redirect('products_list')
@@ -207,19 +193,19 @@ def bkash_order(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     order = Order(user=request.user, product=product)
     order.transaction_id = request.POST['transaction_id']
-    order.payment_options  = 'Bkash'
+    order.payment_options = 'Bkash'
     order.save()
 
     cart = Cart.objects.get(user=request.user)
     cart.product.remove(product)
     cart.save()
 
-    #return HttpResponseRedirect(reverse('cart'))
+    # return HttpResponseRedirect(reverse('cart'))
     return redirect('cart')
+
 
 @login_required
 def review_after_complete(request, product_id):
-
     already_reviewed = False
 
     searched_product = get_object_or_404(Product, id=product_id)
@@ -228,7 +214,6 @@ def review_after_complete(request, product_id):
     print(user_list, len(user_list))
     if len(user_list) != 0:
         already_reviewed = True
-
 
     form = ReviewForm()
 
